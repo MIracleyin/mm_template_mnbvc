@@ -2,11 +2,14 @@ from datetime import datetime
 from loguru import logger
 from pathlib import Path
 import argparse
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.mm_data.core.models.chinaxiv_block import get_blocks, batch_to_parquet
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Docling Convert")
+    parser = argparse.ArgumentParser(description="Chinaxiv Convert")
     parser.add_argument("--input_file", "-i", type=Path, help="Input file")
     parser.add_argument("--output_file", "-o", type=Path, help="Output file")
     parser.add_argument("--type", "-t", type=str, choices=["pdf", "image-text-pair"], help="output type")

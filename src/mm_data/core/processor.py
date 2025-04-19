@@ -2,7 +2,8 @@
 2025.03.19 miracleyin@live.com
 """
 
-from .models import mmDataBlock
+import hashlib
+from .models.mmdata_block import mmDataBlock
 from pathlib import Path
 from typing import List
 import pandas as pd
@@ -59,3 +60,7 @@ def batch_to_parquet(output_file: Path, split_size: int, batchs: List[List[mmDat
                             row_group_size=100000  # 优化读写性能的行组大小
                             )
         logger.info(f"batch {split_count} done, {output_file_last} generated")
+
+def get_md5(text: str) -> str:
+    """获取文本的md5值"""
+    return hashlib.md5(text.encode('utf-8')).hexdigest()

@@ -15,7 +15,9 @@ uv sync
 ## 使用
 
 ```bash
-python main.py --input_file input.txt --output_file output.parquet --split_size 200 --log_dir logs
+# python main.py --input_file input.txt --output_file output.parquet --split_size 200 --log_dir logs
+
+python scripts/chinaxiv_convert.py -i data/list.txt -o output -t image-text-pair -l logs
 ```
 
 ## 参数
@@ -32,3 +34,19 @@ python main.py --input_file input.txt --output_file output.parquet --split_size 
 - [ ] 添加数据解析结果验证
 - [ ] 添加数据解析结果统计(字数、图片数量、视频数量、音频数量、OCR 数量、STT 数量)
 - [ ] cli 接口
+
+## 框架
+
+```mermaid
+graph TD
+    Root["mm_template_mnbvc"] --> Scripts & Src & Data & Output & MainPy & PyProjectToml
+    
+    Scripts --> ChinaxivConvert["chinaxiv_convert.py"]
+    Src --> MmData
+    MmData --> Core
+    Core --> Models & FileHandlers["file_handlers.py"] & ProcessorPy["processor.py"]
+    Models --> ChinaxivBlock["chinaxiv_block.py"] & MmDataBlock["mmdata_block.py"]
+    
+    ChinaxivConvert -- "imports" --> ChinaxivBlock
+    MmDataBlock -- "used by" --> ChinaxivBlock
+```

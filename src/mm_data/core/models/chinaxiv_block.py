@@ -6,6 +6,7 @@ import pyarrow as pa
 import pyarrow.parquet as parquet
 from loguru import logger
 from src.mm_data.core.file_handlers import get_pdf_bytes, get_img_bytes_and_size
+from src.mm_data.core.processor import get_md5
 import json
 
 """
@@ -89,9 +90,10 @@ def chinaxiv_to_image_text_pair_blocks(input_file: Path) -> List[ChinaxivBlock]:
             实体ID=img_file.name,
             块ID=block_id,
             块类型="image-text-pair",
-            扩展字段=json_data.dumps(),
+            扩展字段=json.dumps(json_data),
             图片=img_data,
-            文本=md_data
+            文本=md_data,
+            md5=get_md5(img_file.name)
         ))
         
     logger.info(

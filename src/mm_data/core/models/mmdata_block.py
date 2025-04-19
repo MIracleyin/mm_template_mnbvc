@@ -25,8 +25,8 @@ class mmDataBlock:
     md5: str
     块ID: int
     块类型: str
-    时间: str = field(default_factory=get_timestamp)
     扩展字段: str
+    时间: str = field(default_factory=get_timestamp)
 
     # 可空字段
     页ID: Optional[str] = None
