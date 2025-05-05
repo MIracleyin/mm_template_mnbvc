@@ -35,6 +35,11 @@ python scripts/chinaxiv_convert.py -i data/list.txt -o output -t image-text-pair
 - [ ] 添加数据解析结果统计(字数、图片数量、视频数量、音频数量、OCR 数量、STT 数量)
 - [ ] cli 接口
 
+## pr 规范
+1. src/mm_data/core/models 完成数据 block 类、辅助函数
+2. scripts 完成转换脚本
+3. data 提交示例数据（使用 lfs 提交）
+
 ## 框架
 
 ```mermaid
