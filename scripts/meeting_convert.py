@@ -1,6 +1,8 @@
 import sys
 import os
 from datetime import datetime
+from typing import List
+
 from loguru import logger
 from pathlib import Path
 import argparse
@@ -24,13 +26,30 @@ def main():
     output_dir = args.output_dir
     block_type = args.type
     device = args.device
-
     log_dir = args.log_dir
+
     logger_file = log_dir / f"to_mm_{current_date}.log"
     logger.add(logger_file, encoding="utf-8", rotation="500MB")
 
     if block_type == "video":
-        process_video_to_parquets(input_dir, output_dir, use_auth_token=os.getenv("WHISPERX_API_KEY"), device=device)
+        if not input_dir.exists() or not input_dir.is_dir():
+            raise ValueError(f"输入目录无效: {input_dir}")
+
+        # 👇 获取视频列表
+        videos: List[Path] = sorted(input_dir.glob("*.mp4"))
+
+        if not videos:
+            logger.warning(f"输入目录中未找到视频文件: {input_dir}")
+            return
+
+        process_video_to_parquets(
+            videos=videos,
+            output_dir=output_dir,
+            use_auth_token=os.getenv("WHISPERX_API_KEY"),
+            device=device
+        )
+    else:
+        logger.warning(f"尚未处理 block_type: {block_type}")
 
 
 if __name__ == "__main__":
