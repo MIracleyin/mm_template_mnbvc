@@ -58,7 +58,8 @@ class VideoProcessor:
         audio_file = video_file.with_suffix(".mp3")
 
         # 提取音频
-        self.extract_audio(video_file, audio_file)
+        if not audio_file.exists():
+            self.extract_audio(video_file, audio_file)
 
         # 转录音频 + 说话人识别
         segments = self.speech_to_text(audio_file)
