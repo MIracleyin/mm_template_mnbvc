@@ -10,4 +10,6 @@ dependencies = [
     "pandas>=2.2.3",
     "pyarrow>=19.0.1",
     "pillow>=11.2.1",
+    "whisperx>=3.3.4",
+    "moviepy>=1.0.3",
 ]
