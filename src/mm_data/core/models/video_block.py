@@ -74,7 +74,7 @@ class VideoProcessor:
         stt = self.speech_to_text(audio_file)
         texts = [segment.get('text', '') for segment in stt['segments'] if isinstance(segment, dict)]
         full_text = ' '.join(texts)
-        language = stt['language']
+        language = stt.get('language', 'unknown')
 
         with open(video_file, 'rb') as f:
             binary_data = f.read()
@@ -91,7 +91,7 @@ class VideoProcessor:
             视频=binary_data,
             文本=full_text,
             STT文本=str(stt),
-            扩展字段=extends
+            扩展字段=str(extends)
         )
 
         return block
