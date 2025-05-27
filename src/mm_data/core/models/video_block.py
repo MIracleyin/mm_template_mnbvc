@@ -5,7 +5,7 @@ from typing import List
 import pandas as pd
 import whisperx
 from loguru import logger
-from moviepy import *
+from moviepy import VideoFileClip, AudioFileClip
 
 from src.mm_data.core.models.mmdata_block import mmDataBlock, get_md5
 
@@ -61,11 +61,26 @@ class VideoProcessor:
         if not audio_file.exists():
             self.extract_audio(video_file, audio_file)
 
-        # 转录音频 + 说话人识别
-        segments = self.speech_to_text(audio_file)
+        # 读取音频时长
+        try:
+            audio_clip = AudioFileClip(str(audio_file))
+            duration = audio_clip.duration
+            audio_clip.close()  # 释放音频资源
+        except Exception as e:
+            logger.error(f"读取音频时长失败: {e}")
+            duration = None
+
+        # stt信息提取
+        stt = self.speech_to_text(audio_file)
+        texts = [segment.get('text', '') for segment in stt['segments'] if isinstance(segment, dict)]
+        full_text = ' '.join(texts)
+        language = stt.get('language', 'unknown')
 
         with open(video_file, 'rb') as f:
             binary_data = f.read()
+
+        # 创建扩展字段字典
+        extends = {"duration": duration, "language": language}
 
         block = VideoBlock(
             实体ID=video_file.name,
@@ -73,8 +88,10 @@ class VideoProcessor:
             块ID=block_id,
             块类型="视频",
             时间=str(pd.Timestamp.now()),
-            扩展字段=str(segments),
-            视频=binary_data
+            视频=binary_data,
+            文本=full_text,
+            STT文本=str(stt),
+            扩展字段=str(extends)
         )
 
         return block
