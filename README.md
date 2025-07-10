@@ -14,11 +14,19 @@ uv sync
 
 ## 使用
 
-```bash
-# python main.py --input_file input.txt --output_file output.parquet --split_size 200 --log_dir logs
+pdfcontent 转换
 
-python scripts/chinaxiv_convert.py -i data/list.txt -o output -t image-text-pair -l logs
+``` bash
+# step 1 
+git submodule update --remote # 拉取子模块
+
+# step 2 使用 parser 处理 pdf
+
+# step 3 将 jsonl 转 parquet
 ```
+
+
+
 
 ## 参数
 
