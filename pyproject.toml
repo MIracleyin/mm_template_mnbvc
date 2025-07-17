@@ -12,4 +12,5 @@ dependencies = [
     "pillow>=11.2.1",
     "whisperx>=3.3.4",
     "moviepy>=1.0.3",
+    "pymupdf>=1.26.3",
 ]
