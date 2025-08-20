@@ -25,12 +25,9 @@ cd parser
 uv run main.py -i xxx -o xxx -d  # 开启语言检测
 
 # step 3 将 jsonl 转 parquet
-python scripts/pdfcontent_convert.py -i xxx.jsonl -o xxx.parquet -sq map.sql -sp 500 # sq 为映射
-
+python scripts/pdfcontent_convert.py -i xxx.jsonl -o xxx.parquet -sq map.sql -tsg 5.0 # sq 为映射
 
 ```
-
-
 
 
 ## 参数
