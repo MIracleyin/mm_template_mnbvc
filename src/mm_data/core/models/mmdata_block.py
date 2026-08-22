@@ -15,10 +15,17 @@ import pyarrow as pa
 TIMESTAMP_FORMAT = "%Y%m%d"
 
 #: 块类型 的取值。集中在这里，避免各模态各写各的字面量。
+#:
+#: 历史上这一列出现过三套词汇：已发布的标准示例
+#: (hf.co/datasets/miracleyin/example_mmdata_mnbvc) 用 文字/图片/音频，
+#: chinaxiv 用 pdf/image-text-pair，video_block 用 视频。同一列中英文混着来，
+#: 按块类型筛选就得写 `块类型 IN ('video', '视频')` 这种东西。统一到英文。
+BLOCK_TYPE_TEXT = "text"
+BLOCK_TYPE_IMAGE = "image"
+BLOCK_TYPE_AUDIO = "audio"
+BLOCK_TYPE_VIDEO = "video"
 BLOCK_TYPE_PDF = "pdf"
 BLOCK_TYPE_IMAGE_TEXT_PAIR = "image-text-pair"
-BLOCK_TYPE_VIDEO = "video"
-BLOCK_TYPE_AUDIO = "audio"
 
 #: 媒体列（图片/视频/音频）的 Arrow 类型。
 #:
