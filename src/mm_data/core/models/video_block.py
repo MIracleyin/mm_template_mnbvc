@@ -1,13 +1,13 @@
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
-import pandas as pd
 import whisperx
 from loguru import logger
 from moviepy import VideoFileClip, AudioFileClip
 
-from src.mm_data.core.models.mmdata_block import mmDataBlock, get_md5
+from src.mm_data.core.models.mmdata_block import BLOCK_TYPE_VIDEO, mmDataBlock
+from src.mm_data.core.processor import write_blocks
 
 
 @dataclass
@@ -84,31 +84,35 @@ class VideoProcessor:
 
         block = VideoBlock(
             实体ID=video_file.name,
-            md5=get_md5(video_file.name),
+            # 原来是 get_md5(video_file.name)，哈希的是文件名。留空由
+            # mmDataBlock 按内容计算。
+            md5="",
             块ID=block_id,
-            块类型="视频",
-            时间=str(pd.Timestamp.now()),
+            # 原来是 "视频"，而 chinaxiv 那边用的是 "pdf" / "image-text-pair"，
+            # 同一列中英文混着来，没法按块类型统一筛选。
+            块类型=BLOCK_TYPE_VIDEO,
+            # 原来是 str(pd.Timestamp.now())，得到 "2025-03-19 10:00:00.123456"，
+            # 而 mmDataBlock 默认的 时间 是 "20250319"。同一列两种格式。
+            # 这里用默认值，即 mmdata_block.TIMESTAMP_FORMAT。
             视频=binary_data,
             文本=full_text,
             STT文本=str(stt),
-            扩展字段=str(extends)
+            # 原来是 str(extends)，Python 的 str(dict) 是单引号，不是合法 JSON，
+            # json.loads 直接报错。交给 mmDataBlock 序列化。
+            扩展字段=extends,
         )
 
         return block
 
 
 def block_to_parquet(block: VideoBlock, parquet_file: Path) -> None:
-    """将块实例存储为parquet格式"""
+    """将块实例存储为parquet格式
+
+    原来是 pd.DataFrame([asdict(block)]).to_parquet(...)，类型由 pandas 推断，
+    结果和 chinaxiv 那条路径写出来的 schema 对不上。统一走 write_blocks。
+    """
     logger.debug(f"将块存储为parquet文件: {parquet_file}")
-
-    # 将 dataclass 转换为字典
-    block_dict = asdict(block)
-
-    # 将字典包装为单行 DataFrame
-    df = pd.DataFrame([block_dict])
-
-    # 写入 Parquet 文件
-    df.to_parquet(parquet_file, index=False)
+    write_blocks([block], parquet_file)
 
 
 def process_video_to_parquets(videos: List[Path], output_dir: Path, use_auth_token: str, device: str) -> None:
