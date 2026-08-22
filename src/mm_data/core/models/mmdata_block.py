@@ -17,7 +17,7 @@ TIMESTAMP_FORMAT = "%Y%m%d"
 #: 块类型 的取值。集中在这里，避免各模态各写各的字面量。
 BLOCK_TYPE_PDF = "pdf"
 BLOCK_TYPE_IMAGE_TEXT_PAIR = "image-text-pair"
-BLOCK_TYPE_VIDEO = "视频"
+BLOCK_TYPE_VIDEO = "video"
 BLOCK_TYPE_AUDIO = "audio"
 
 #: 媒体列（图片/视频/音频）的 Arrow 类型。
