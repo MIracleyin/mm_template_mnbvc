@@ -13,3 +13,11 @@ dependencies = [
     "whisperx>=3.3.4",
     "moviepy>=1.0.3",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
